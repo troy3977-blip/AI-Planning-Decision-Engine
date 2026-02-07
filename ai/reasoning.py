@@ -1,9 +1,8 @@
-# ai/reasoning.py
 from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Protocol, Tuple
+from typing import Any, Dict, List, Optional, Protocol  # ← remove Tuple
 
 from pydantic import ValidationError
 
@@ -18,7 +17,7 @@ from .prompts import SYSTEM_PROMPT, build_mode_instruction, build_user_payload
 class LLMClient(Protocol):
     def complete_json(self, *, system: str, user: str) -> str:
         """Return a raw string (expected JSON). Provider must NOT add markdown wrappers."""
-
+        ...
 
 # ----------------------------
 # Errors / results
