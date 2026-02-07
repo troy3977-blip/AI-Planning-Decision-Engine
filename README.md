@@ -12,7 +12,7 @@ Run with or without external AI access
 
 Be testable, explainable, and production-oriented
 
-# Architecture Overview
+# Architecture Overview #
 
 ├── engine/          # Deterministic workforce planning logic
 │   ├── forecasting.py
