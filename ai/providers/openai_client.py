@@ -1,51 +1,49 @@
-# ai/providers/openai_client.py (only the init changes)
+# ai/providers/openai_client.py
 from __future__ import annotations
-from config.settings import settings
-from openai import OpenAI
-import os
+
 from dataclasses import dataclass
 from typing import Optional
-from ..reasoning import LLMClient
 
-class OpenAIClient(LLMClient):
-    def __init__(self):
-        self.client = OpenAI(api_key=settings.openai_api_key)
-        self.model = settings.openai_model
+from openai import OpenAI
 
-@dataclass
+from config.settings import settings
+from ai.reasoning import LLMClient
+
+
+@dataclass(frozen=True)
 class OpenAIClientConfig:
     """
-    Minimal config for an OpenAI provider adapter.
-
-    Environment variables (defaults):
-      - OPENAI_API_KEY (required)
-      - OPENAI_MODEL (optional) default: gpt-4.1-mini
+    Optional overrides. Defaults come from config.settings.Settings (.env / env vars).
     """
-    api_key_env: str = "OPENAI_API_KEY"
-    model_env: str = "OPENAI_MODEL"
-    default_model: str = "gpt-4.1-mini"
-    timeout_s: float = 30.0
+    model: Optional[str] = None
+    temperature: float = 0.2
 
 
 class OpenAIClient(LLMClient):
     """
     Provider adapter that returns raw JSON text for strict parsing upstream.
-    Uses the Responses API and requests a JSON object output.
+
+    - Uses OpenAI Responses API
+    - Forces JSON-only output (json_object)
+    - Returns ONLY the JSON object as a string (no markdown)
     """
 
     def __init__(self, config: Optional[OpenAIClientConfig] = None):
         self.config = config or OpenAIClientConfig()
-        api_key = os.getenv(self.config.api_key_env)
+
+        # Central config (supports .env via pydantic-settings)
+        api_key = settings.openai_api_key
+        model = self.config.model or settings.openai_model
+
         if not api_key:
-            raise ValueError(
-                f"Missing OpenAI API key. Set env var: {self.config.api_key_env}"
-            )
+            raise ValueError("Missing OpenAI API key (OPENAI_API_KEY).")
+
         self.client = OpenAI(api_key=api_key)
-        self.model = os.getenv(self.config.model_env, self.config.default_model)
+        self.model = model
 
     def complete_json(self, *, system: str, user: str) -> str:
         """
-        Return ONLY the model's JSON object as a string (no markdown).
+        Returns ONLY the model's JSON object as a string.
         Upstream enforces strict { ... } parsing.
         """
         resp = self.client.responses.create(
@@ -56,13 +54,10 @@ class OpenAIClient(LLMClient):
             ],
             # Enforce machine-readable JSON output
             text={"format": {"type": "json_object"}},
-            # Keep outputs tight & deterministic-ish for decision support
-            temperature=0.2,
+            temperature=self.config.temperature,
         )
 
-        # The SDK returns aggregated output text at resp.output_text
         out = (resp.output_text or "").strip()
         if not out:
             raise RuntimeError("OpenAI returned empty output_text.")
         return out
-    
