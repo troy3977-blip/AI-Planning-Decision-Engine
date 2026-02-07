@@ -1,6 +1,12 @@
-pydantic-settings>=2.0.0
-python-dotenv>=1.0.0
-openai>=1.0.0
+# Core language + typing
 pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# OpenAI provider
 openai>=1.0.0
-pytest>=7.0.0
+
+# App framework
+streamlit>=1.30.0
+
+# Environment variable loading
+python-dotenv>=1.0.0
