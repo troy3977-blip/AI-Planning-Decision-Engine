@@ -12,29 +12,29 @@ Run with or without external AI access
 
 Be testable, explainable, and production-oriented
 
-# Architecture Overview #
-.
-  ├── engine/          # Deterministic workforce planning logic
-  │   ├── forecasting.py
-  │   ├── staffing.py
-  │   └── scenarios.py
-  │
-  ├── ai/              # AI reasoning + validation layer
-  │   ├── schema.py    # Pydantic models (authoritative contract)
-  │   ├── prompts.py   # System + user prompt construction
-  │   ├── reasoning.py # Orchestration, validation, retries, fallback
-  │   └── providers/
-  │       └── openai_client.py
-  │
-  ├── config/          # Centralized settings (.env via pydantic-settings)
-  │   └── settings.py
-  │
-  ├── tests/           # Pytest suite (no external calls)
-  │
-  ├── run_decision_engine.py  # Primary execution entrypoint
-  ├── requirements.txt
-  ├── requirements-dev.txt
-  └── .env.example     # Template only (no secrets)
+    # Architecture Overview
+
+    ├── engine/          # Deterministic workforce planning logic
+    │   ├── forecasting.py
+    │   ├── staffing.py
+    │   └── scenarios.py
+    │
+    ├── ai/              # AI reasoning + validation layer
+    │   ├── schema.py    # Pydantic models (authoritative contract)
+    │   ├── prompts.py   # System + user prompt construction
+    │   ├── reasoning.py # Orchestration, validation, retries, fallback
+    │   └── providers/
+    │       └── openai_client.py
+    │
+    ├── config/          # Centralized settings (.env via pydantic-settings)
+    │   └── settings.py
+    │
+    ├── tests/           # Pytest suite (no external calls)
+    │
+    ├── run_decision_engine.py  # Primary execution entrypoint
+    ├── requirements.txt
+    ├── requirements-dev.txt
+    └── .env.example     # Template only (no secrets)
 
 Core Design Principles
 1. Deterministic First
