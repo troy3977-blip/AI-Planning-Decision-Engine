@@ -1,188 +1,191 @@
-# AI-Augmented Workforce Planning & Decision Engine #
+AI Planning Decision Engine
 
-Applied Decision Intelligence for Operations Leaders
+A headless decision-intelligence engine that combines deterministic workforce planning outputs with a validated AI reasoning layer to produce executive-ready recommendations.
 
-Executive Summary
+This project is intentionally designed to:
 
-This project demonstrates a decision-grade workforce planning system that helps operations leaders choose staffing plans under uncertainty.
-Rather than producing a single “optimal” forecast, the system generates multiple feasible staffing scenarios, quantifies cost, service-level, and risk tradeoffs, and uses an AI reasoning layer to explain those tradeoffs in clear, business-ready language.
+Separate math from narrative
 
-Crucially, the system is human-in-the-loop: AI assists with interpretation and recommendation, while final decisions remain with the operator and are fully auditable.
+Enforce strict schema validation on AI output
 
-This design reflects how AI is actually deployed in enterprise operations today—as a copilot for decision-makers, not an autonomous black box.
+Run with or without external AI access
 
-The Business Problem
+Be testable, explainable, and production-oriented
 
-    Operations teams routinely face questions like:
+Architecture Overview
+.
+├── engine/          # Deterministic workforce planning logic
+│   ├── forecasting.py
+│   ├── staffing.py
+│   └── scenarios.py
+│
+├── ai/              # AI reasoning + validation layer
+│   ├── schema.py    # Pydantic models (authoritative contract)
+│   ├── prompts.py   # System + user prompt construction
+│   ├── reasoning.py # Orchestration, validation, retries, fallback
+│   └── providers/
+│       └── openai_client.py
+│
+├── config/          # Centralized settings (.env via pydantic-settings)
+│   └── settings.py
+│
+├── tests/           # Pytest suite (no external calls)
+│
+├── run_decision_engine.py  # Primary execution entrypoint
+├── requirements.txt
+├── requirements-dev.txt
+└── .env.example     # Template only (no secrets)
 
-    How many agents do we staff when demand forecasts are uncertain?
+Core Design Principles
+1. Deterministic First
 
-    What is the cost of protecting service levels versus accepting controlled risk?
+All staffing, cost, SLA, and risk metrics are produced by deterministic engine logic (engine/).
+The AI never computes new numbers.
 
-    Which staffing plan best balances SLA compliance, budget, and employee utilization?
+2. AI as a Reasoning Layer
 
-Traditional analytics answer parts of this problem. This system addresses the decision itself.
+The AI layer:
 
-What This System Does
+Interprets scenario outputs
 
-    Computes staffing requirements using deterministic workforce models (Erlang-based).
+Compares tradeoffs
 
-    Generates multiple scenarios (cost-optimized, SLA-optimized, balanced, risk-averse).
+Produces grounded, executive-style recommendations
 
-    Quantifies risk (e.g., SLA breach probability, peak occupancy).
+Must conform to a strict JSON schema
 
-    Uses AI to interpret results, compare scenarios, and explain tradeoffs.
+If output is invalid → it is rejected and corrected.
 
-    Keeps humans in control, capturing final decisions and rationale for governance.
+3. Strict Validation
 
-    Decision Workflow
-      Inputs
-        ├─ Forecast Volume
-        ├─ AHT
-        ├─ Shrinkage
-        ├─ SLA Targets
-        └─ Cost Assumptions
-      ↓
-      Deterministic Staffing Engine
-      ↓
-      Scenario Generator
-        ├─ Cost-Minimized
-        ├─ SLA-Protected
-        ├─ Balanced
-        └─ Risk-Averse
-      ↓
-      AI Reasoning Layer
-        ├─ Tradeoff Explanation
-        ├─ Risk Highlighting
-        └─ Scenario Recommendation
-      ↓
-      Human Decision
-        ├─ Accept / Override
-        └─ Rationale Captured
-      ↓
-      Audit Log (Explainable & Reviewable)
+All AI output is validated against Pydantic models:
 
-Key Design Principles
+No free-form text
 
-    1. Decision Intelligence (Not Just Analytics)
+No schema drift
 
-      The goal is choice, not prediction. The system surfaces alternatives and consequences so leaders can make informed tradeoffs.
+No hallucinated metrics
 
-    2. AI as a Copilot
+Invalid responses trigger a correction retry or graceful fallback.
 
-      The AI layer:
+4. External Dependency Isolation
 
-      Does not compute staffing or costs
+The system runs in three modes:
 
-      Does not invent scenarios
+OpenAI provider (when quota/billing available)
 
-      Explains results using only validated model outputs
+DummyLLM fallback (no external access required)
 
-      This ensures trust, grounding, and explainability.
+Fully testable offline (pytest)
 
-    3. Human-in-the-Loop by Design
+Execution
+1. Install dependencies
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-      Final decisions are made by people, not models—and recorded for transparency.
+2. Configure environment
 
-    4. Auditability & Governance
+Create a local .env (not committed):
 
-      Every run captures:
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-4.1-mini
+APP_ENV=local
+LOG_LEVEL=INFO
+AI_PROVIDER=openai   # or "dummy"
 
-        Inputs
 
-        Generated scenarios
+.env is ignored by git.
+Use .env.example as a template only.
 
-        AI recommendation and rationale
+3. Run the engine (headless)
+python run_decision_engine.py
 
-        Final human decision
 
-      This mirrors real enterprise requirements for accountability.
+Behavior:
 
-Sample Executive Output
+Generates workforce scenarios via engine/
 
-AI Recommendation (Executive View)
+Invokes AI reasoning
 
-Scenario B is recommended. It meets the 80/60 SLA target with 6% lower annual cost than the conservative option while remaining within the defined risk tolerance. Peak occupancy is elevated during the evening interval and should be monitored.
+Validates the response
 
-Risk Flags
+Falls back to DummyLLM if OpenAI is unavailable
 
-Peak occupancy exceeds 92% during 17:00–18:00
+Prints an executive summary and recommendation
 
-SLA breach risk increases if AHT rises by >5%
+Testing
 
-    Repository Structure
-      /engine
-        staffing.py        # Erlang-based staffing logic
-        forecasting.py     # Forecast handling & validation
-        scenarios.py       # Scenario generation
+All tests are offline and deterministic.
 
-      /ai
-        prompts.py         # Controlled AI prompt templates
-        schema.py          # Structured output schema
-        reasoning.py       # AI reasoning interface + validation
+pip install -r requirements-dev.txt
+pytest
 
-      /ui
-        app.py             # Interactive decision UI (Streamlit)
 
-      /docs
-        architecture.png
-        decision_flow.md
+Test coverage includes:
 
-Why This Project Is Different
+Scenario generation sanity checks
 
-❌ Not a toy ML demo
+Staffing math validation
 
-❌ Not a chatbot over data
+Occupancy and risk bounds
 
-❌ Not auto-decision AI
+AI schema validation using DummyLLM
 
-✅ A decision-grade system
+End-to-end reasoning without external APIs
 
-✅ Human-centered AI design
+AI Output Contract
 
-✅ Business-first framing
+AI output must conform to the AIResponse schema:
 
-✅ Enterprise-ready governance mindset
+Executive summary
 
-This project demonstrates how AI is responsibly applied in operations and strategy roles, not just how models are trained.
+Grounded recommendation
 
-Intended Audience
+Explicit tradeoffs (structured objects, not prose)
 
-  Operations & Workforce Planning Leaders
+Scenario-level citations
 
-  Senior Data / Decision Scientists
+Any deviation:
 
-  Strategy & Analytics Teams
+Fails validation
 
-  AI Engineers working on applied decision systems
+Triggers a correction prompt
 
-Technologies & Concepts
+Or falls back safely
 
-  Python (modular, production-oriented)
+This guarantees:
 
-  Erlang-based workforce modeling
+Explainability
 
-  Scenario analysis & risk quantification
+Auditability
 
-  LLM-based reasoning (provider-agnostic)
+Deterministic inputs → controlled narrative outputs
 
-  Human-in-the-loop AI
+Why This Matters
 
-  Explainability & audit logging
+This project demonstrates:
 
-Future Enhancements
+Decision intelligence, not prompt engineering
 
-  Multi-skill routing scenarios
+Production-grade AI integration
 
-  Budget-constrained optimization
+Separation of concerns
 
-  Copilot-style conversational interface
+Failure-tolerant design
 
-  Integration with real-time operational data
+Test-first thinking
 
-  Sensitivity analysis automation
+It is intentionally not a UI demo and not a notebook experiment.
 
-Author’s Note
+Future Extensions (Intentional, Not Required)
 
-  This project is intentionally framed around decision-making, not algorithms.
-  The emphasis is on judgment, tradeoffs, and accountability—the qualities that separate senior analysts and applied AI practitioners from purely technical contributors.
+Replace proxy SLA logic with Erlang-C / interval SL
+
+Add FastAPI or CLI interface
+
+Add scenario sensitivity analysis (AHT ±%, volume shocks)
+
+Persist decisions for audit trails
+
+Add structured logging
