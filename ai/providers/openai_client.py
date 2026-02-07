@@ -1,14 +1,16 @@
-# ai/providers/openai_client.py
+# ai/providers/openai_client.py (only the init changes)
 from __future__ import annotations
-
+from config.settings import settings
+from openai import OpenAI
 import os
 from dataclasses import dataclass
 from typing import Optional
-
-from openai import OpenAI
-
 from ..reasoning import LLMClient
 
+class OpenAIClient(LLMClient):
+    def __init__(self):
+        self.client = OpenAI(api_key=settings.openai_api_key)
+        self.model = settings.openai_model
 
 @dataclass
 class OpenAIClientConfig:
