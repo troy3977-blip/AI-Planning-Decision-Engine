@@ -1,6 +1,6 @@
-# AI-Augmented Workforce Planning & Decision Engine
+# AI-Augmented Workforce Planning & Decision Engine #
 
-pp lied Decision Intelligence for Operations Leaders
+Applied Decision Intelligence for Operations Leaders
 
 Executive Summary
 
@@ -35,7 +35,7 @@ Uses AI to interpret results, compare scenarios, and explain tradeoffs.
 
 Keeps humans in control, capturing final decisions and rationale for governance.
 
-    # Decision Workflow
+    Decision Workflow
       Inputs
         ├─ Forecast Volume
         ├─ AHT
@@ -109,7 +109,7 @@ Peak occupancy exceeds 92% during 17:00–18:00
 
 SLA breach risk increases if AHT rises by >5%
 
-    # Repository Structure
+    Repository Structure
       /engine
         staffing.py        # Erlang-based staffing logic
         forecasting.py     # Forecast handling & validation
@@ -136,8 +136,11 @@ Why This Project Is Different
 ❌ Not auto-decision AI
 
 ✅ A decision-grade system
+
 ✅ Human-centered AI design
+
 ✅ Business-first framing
+
 ✅ Enterprise-ready governance mindset
 
 This project demonstrates how AI is responsibly applied in operations and strategy roles, not just how models are trained.
