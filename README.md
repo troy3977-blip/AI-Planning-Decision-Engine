@@ -12,8 +12,8 @@ Run with or without external AI access
 
 Be testable, explainable, and production-oriented
 
-Architecture Overview
-.
+# Architecture Overview
+
 ├── engine/          # Deterministic workforce planning logic
 │   ├── forecasting.py
 │   ├── staffing.py
@@ -189,3 +189,8 @@ Add scenario sensitivity analysis (AHT ±%, volume shocks)
 Persist decisions for audit trails
 
 Add structured logging
+
+License / Usage
+
+This project is intended for demonstration and portfolio use.
+Secrets are never committed. External services are optional.
