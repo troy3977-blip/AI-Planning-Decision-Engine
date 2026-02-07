@@ -13,27 +13,27 @@ This design reflects how AI is actually deployed in enterprise operations today�
 
 The Business Problem
 
-Operations teams routinely face questions like:
+    Operations teams routinely face questions like:
 
-How many agents do we staff when demand forecasts are uncertain?
+    How many agents do we staff when demand forecasts are uncertain?
 
-What is the cost of protecting service levels versus accepting controlled risk?
+    What is the cost of protecting service levels versus accepting controlled risk?
 
-Which staffing plan best balances SLA compliance, budget, and employee utilization?
+    Which staffing plan best balances SLA compliance, budget, and employee utilization?
 
 Traditional analytics answer parts of this problem. This system addresses the decision itself.
 
 What This System Does
 
-Computes staffing requirements using deterministic workforce models (Erlang-based).
+    Computes staffing requirements using deterministic workforce models (Erlang-based).
 
-Generates multiple scenarios (cost-optimized, SLA-optimized, balanced, risk-averse).
+    Generates multiple scenarios (cost-optimized, SLA-optimized, balanced, risk-averse).
 
-Quantifies risk (e.g., SLA breach probability, peak occupancy).
+    Quantifies risk (e.g., SLA breach probability, peak occupancy).
 
-Uses AI to interpret results, compare scenarios, and explain tradeoffs.
+    Uses AI to interpret results, compare scenarios, and explain tradeoffs.
 
-Keeps humans in control, capturing final decisions and rationale for governance.
+    Keeps humans in control, capturing final decisions and rationale for governance.
 
     Decision Workflow
       Inputs
@@ -53,7 +53,7 @@ Keeps humans in control, capturing final decisions and rationale for governance.
       ↓
       AI Reasoning Layer
         ├─ Tradeoff Explanation
-        ├isk Highlighting
+        ├─ Risk Highlighting
         └─ Scenario Recommendation
       ↓
       Human Decision
@@ -63,6 +63,7 @@ Keeps humans in control, capturing final decisions and rationale for governance.
       Audit Log (Explainable & Reviewable)
 
 Key Design Principles
+
     1. Decision Intelligence (Not Just Analytics)
 
       The goal is choice, not prediction. The system surfaces alternatives and consequences so leaders can make informed tradeoffs.
