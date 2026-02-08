@@ -49,7 +49,7 @@ The AI does **not invent numbers** — it reasons only over deterministic engine
 - Streamlit UI for interactive exploration
 
 ---
-re Data Models
+Data Models
 DecisionContext
 
 Defines how the AI should reason.
@@ -81,7 +81,6 @@ occupancy_peak: Optional[float]
 Scenario
 
 Authoritative outputs from the deterministic engine.
-
 
 ## Repository Structure ##
 
