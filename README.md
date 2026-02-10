@@ -6,7 +6,7 @@ This project demonstrates how structured business inputs and quantitative output
 
 ---
 
-## What This Project Does
+## What This Project Does ##
 
 1. **Consumes authoritative scenario metrics** (e.g., FTE, cost, SLA, risk)
 2. **Applies business constraints** (SLA targets, budget caps, risk limits)
@@ -33,55 +33,6 @@ The AI does **not invent numbers** — it reasons only over deterministic engine
 
 ---
 
----
-
-## Key Features
-
-- Deterministic-first design (AI never replaces math)
-- Strongly typed schemas with validation (Pydantic)
-- Multiple decision modes:
-  - `recommend` – select the best scenario
-  - `compare` – analyze tradeoffs between scenarios
-  - `qa` – answer questions about the scenario set
-- Audience-aware explanations (exec, ops manager, analyst)
-- Constraint-aware feasibility checks
-- Audit-friendly structured outputs
-- Streamlit UI for interactive exploration
-
----
-Data Models
-DecisionContext
-
-Defines how the AI should reason.
-
-objective: balanced | min_cost | max_sla | risk_averse
-decision_mode: recommend | compare | qa
-audience: exec | ops_manager | analyst
-
-min_sla_target: Optional[float]
-max_budget_annual: Optional[float]
-max_breach_risk: Optional[float]
-notes: Optional[str]
-
-scenario_id: str
-name: str
-fte_required: float
-cost_annual: float
-expected_sla: float
-breach_risk: float
-occupancy_peak: Optional[float]
-scenario_id: str
-name: str
-fte_required: float
-cost_annual: float
-expected_sla: float
-breach_risk: float
-occupancy_peak: Optional[float]
-
-Scenario
-
-Authoritative outputs from the deterministic engine.
-
 ## Repository Structure ##
 
 ```text
@@ -102,9 +53,9 @@ Authoritative outputs from the deterministic engine.
 ├── tests/                  # Unit and validation tests
 ├── run_decision_engine.py  # Headless (non-UI) entry point
 └── requirements.txt
+```
 
-Core Data Models
-DecisionContext
+## Core Data Models ##
 
 Defines how the AI should reason.
 objective: balanced | min_cost | max_sla | risk_averse
@@ -116,7 +67,7 @@ max_budget_annual: Optional[float]
 max_breach_risk: Optional[float]
 notes: Optional[str]
 
-Scenario
+## Scenario ##
 
 Authoritative outputs from the deterministic engine.
 scenario_id: str
@@ -129,43 +80,44 @@ occupancy_peak: Optional[float]
 
 AIResponse
 
-    Structured, auditable AI output.
+  - Structured, auditable AI output.
 
-    Recommendation (with confidence)
+  - Recommendation (with confidence)
 
-    Tradeoffs and comparisons
+  - Tradeoffs and comparisons
 
 Executive summary
 
-    Citations (which scenario metrics were used)
+  - Citations (which scenario metrics were used)
 
-    Optional Q&A responses
+  - Optional Q&A responses
 
 Streamlit UI
 
-    The Streamlit app provides:
+  The Streamlit app provides:
 
-        Sidebar controls for:
+  Sidebar controls for:
 
-            Objective
+  - Objective
 
-            Decision mode
+  - Decision mode
 
-            Audience
+  - Audience
 
-            Constraints (SLA, budget, risk)
+  - Constraints (SLA, budget, risk)
 
-        Scenario table with feasibility filtering
+  - Scenario table with feasibility filtering
 
-        Baseline (manual) scenario selection
+  - Baseline (manual) scenario selection
 
-        AI-generated recommendation panel
+  - AI-generated recommendation panel
 
-        Side-by-side comparison (baseline vs AI pick)
+  - Side-by-side comparison (baseline vs AI pick)
 
-        CSV and JSON export for audit or reporting
+  - CSV and JSON export for audit or reporting
 
-Running the App Locally
+## Running the App Locally ##
+
 1. Install dependencies
 pip install -r requirements.txt
 
@@ -183,57 +135,54 @@ python run_decision_engine.py
 
 This is useful for:
 
-    Batch runs
+  - Batch runs
+  - CI pipelines
+  - API integration
+  - Scheduled evaluations
 
-    CI pipelines
+## Design Principles ##
 
-    API integration
+  - Math first, AI second
+  - The AI never fabricates metrics.
+  
+  - Typed contracts everywhere
+  - All inputs and outputs are validated.
+  
+  - Explainability over opacity
+  - Every recommendation includes rationale, risks, and assumptions.
+  
+  - Enterprise realism
+  - Constraints, budgets, and tradeoffs are first-class concepts.
 
-    Scheduled evaluations
+## Intended Use Cases ##
 
-Design Principles
+  - Workforce planning & staffing optimization
+  
+  - Capacity planning under SLA constraints
+  
+  - Executive decision support
+  
+  - Scenario comparison and tradeoff analysis
+  
+  - AI governance / explainability demos
 
-    Math first, AI second
-    The AI never fabricates metrics.
-    
-    Typed contracts everywhere
-    All inputs and outputs are validated.
-    
-    Explainability over opacity
-    Every recommendation includes rationale, risks, and assumptions.
-    
-    Enterprise realism
-    Constraints, budgets, and tradeoffs are first-class concepts.
+## Roadmap ##
 
-Intended Use Cases
+  - Deterministic scenario generator in engine/
+  
+  - Multi-skill / multi-queue modeling
+  
+  - Sensitivity analysis and rerun suggestions
+  
+  - Scenario versioning and audit logs
+  
+  - API service wrapper
 
-    Workforce planning & staffing optimization
-    
-    Capacity planning under SLA constraints
-    
-    Executive decision support
-    
-    Scenario comparison and tradeoff analysis
-    
-    AI governance / explainability demos
-
-Roadmap
-
-    Deterministic scenario generator in engine/
-    
-    Multi-skill / multi-queue modeling
-    
-    Sensitivity analysis and rerun suggestions
-    
-    Scenario versioning and audit logs
-    
-    API service wrapper
-
-Disclaimer
+## Disclaimer ##
 
 This project is for demonstration and portfolio purposes.
 It does not make autonomous decisions and should not be used as-is for production staffing without domain validation.
 
-Author
+Author - Troy Alexander
 
 Built by a workforce analytics practitioner exploring how AI can enhance — not replace — quantitative decision-making.
