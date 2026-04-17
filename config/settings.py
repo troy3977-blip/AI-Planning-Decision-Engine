@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     )
 
     # OpenAI
-    openai_api_key: str = Field(..., alias="OPENAI_API_KEY")
+    openai_api_key: str | None = Field(None, alias="OPENAI_API_KEY")
     openai_model: str = Field("gpt-4.1-mini", alias="OPENAI_MODEL")
 
     # App

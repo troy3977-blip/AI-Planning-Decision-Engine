@@ -1,7 +1,6 @@
 # ui/components/ai_panels.py
 from __future__ import annotations
 
-from dataclasses import asdict
 from typing import Dict, List, Optional
 
 import streamlit as st
@@ -74,9 +73,8 @@ def render_ai_decision_panel(
 
         cols = st.columns([2, 1])
         with cols[0]:
-            st.markdown(f"**Recommended:** `{rec.scenario_id}` — {scenario_map.get(rec.scenario_id, Scenario(  # type: ignore
-                scenario_id=rec.scenario_id, name="(unknown)", fte_required=0, cost_annual=0, expected_sla=0, breach_risk=0
-            )).name}")
+            recommended_name = scenario_map[rec.scenario_id].name if rec.scenario_id in scenario_map else "(unknown)"
+            st.markdown(f"**Recommended:** `{rec.scenario_id}` — {recommended_name}")
         with cols[1]:
             st.metric("Confidence", f"{rec.confidence:.0%}")
 
