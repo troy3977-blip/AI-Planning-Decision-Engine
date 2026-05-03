@@ -1,17 +1,63 @@
-# Environment secrets
-.env
-
-# Python cache/artifacts
+# From project root
+cat > .gitignore << 'EOF'
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-
-# Tooling caches
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+*$py.class
 
 # Virtual environments
 .venv/
 venv/
+env/
+ENV/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data & Models
+*.csv
+*.xlsx
+*.parquet
+*.pkl
+*.joblib
+/models/
+data/
+
+# Environment variables
+.env
+.env.local
+
+# Build / Distribution
+build/
+dist/
+*.egg-info/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+
+# Mac
+.DS_Store
+EOF
+
+git add .gitignore
+git commit -m "chore: update .gitignore for better Python + Streamlit project hygiene"
