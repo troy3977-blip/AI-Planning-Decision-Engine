@@ -7,12 +7,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v4
-
-    - name: Deploy to Azure
-      uses: azure/webapps-deploy@v3
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: pip install -r requirements.txt
+    - run: pytest tests/ -q
+    - uses: azure/webapps-deploy@v3
       with:
         app-name: smartwfm-lite
         slot-name: production
