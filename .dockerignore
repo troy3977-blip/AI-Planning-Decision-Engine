@@ -1,32 +1,31 @@
-# Python bytecode
+.git/
+.github/
+.agents/
+.codex/
+
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environments
 .venv/
 .venv-*/
 venv/
 env/
 ENV/
 
-# Local environment and secrets
 .env
 .env.local
 .streamlit/secrets.toml
 
-# Test, lint, and coverage output
 .pytest_cache/
 .ruff_cache/
 .coverage
 htmlcov/
 
-# Build and packaging output
 build/
 dist/
 *.egg-info/
 
-# Local data and generated model artifacts
 *.csv
 *.xlsx
 *.parquet
@@ -35,7 +34,6 @@ dist/
 data/
 models/
 
-# Editor and OS files
 .idea/
 .vscode/
 *.swp
@@ -44,5 +42,4 @@ models/
 .DS_Store
 Thumbs.db
 
-# Local launchers
 run.exe

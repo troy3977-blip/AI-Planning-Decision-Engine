@@ -1,24 +1,25 @@
 # ui/app.py
+import os
 import sys
+from datetime import datetime, timedelta
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
+from dotenv import load_dotenv
+
 root_dir = Path(__file__).resolve().parent.parent
 if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-import numpy as np
-from datetime import datetime, timedelta
-import os
-from dotenv import load_dotenv
+from ai.schema import DecisionContext  # noqa: E402
+from engine.forecasting import generate_forecast  # noqa: E402
+from engine.models import StaffingParameters, TimeSeriesData  # noqa: E402
+from engine.scenarios import create_scenarios  # noqa: E402
 
 load_dotenv()
-
-from engine.models import TimeSeriesData, StaffingParameters
-from engine.scenarios import create_scenarios
-from engine.forecasting import generate_forecast
-from ai.schema import DecisionContext
 
 st.set_page_config(page_title="SmartWFM Lite", layout="wide")
 st.title("🧠 SmartWFM Lite – AI Workforce Forecasting & Optimization")
@@ -65,8 +66,8 @@ if uploaded_file:
                     ctx = DecisionContext(objective="balanced", decision_mode="recommend")
                     ai_result = run_reasoning(OpenAIClient(), ctx, scenarios)
                     ai_summary = ai_result.response.exec_summary if hasattr(ai_result, 'response') else ai_summary
-            except:
-                pass
+            except Exception as exc:
+                ai_summary = f"AI recommendations unavailable: {exc}"
 
             col1, col2 = st.columns([3, 2])
             with col1:

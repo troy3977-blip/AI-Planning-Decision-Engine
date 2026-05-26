@@ -24,10 +24,15 @@ def erlang_c(arrival_rate: float, service_rate: float, num_servers: int) -> floa
 
 
 def find_min_servers(arrival_rate: float, service_rate: float, target_sl: float, target_wait: float, max_servers: int = 100) -> int:
-    """Find minimal servers."""
+    """Find minimal servers that satisfy the Erlang-C service level target."""
     for s in range(1, max_servers + 1):
         pw = erlang_c(arrival_rate, service_rate, s)
-        if pw <= (1 - target_sl):
+        service_capacity = (s * service_rate) - arrival_rate
+        if service_capacity <= 0:
+            continue
+
+        service_level = 1 - (pw * np.exp(-service_capacity * target_wait))
+        if service_level >= target_sl:
             return s
     return max_servers
 

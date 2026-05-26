@@ -4,8 +4,7 @@ Bridge between forecasting, staffing, and the AI decision layer.
 Generates multiple business scenarios ready for AI reasoning.
 """
 from typing import List
-from datetime import datetime
-import pandas as pd
+
 from .forecasting import generate_forecast
 from .staffing import generate_staffing_recommendations
 from .models import TimeSeriesData, StaffingParameters

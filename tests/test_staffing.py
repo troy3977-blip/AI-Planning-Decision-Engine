@@ -46,19 +46,21 @@ def staffing_params() -> StaffingParameters:
 
 def test_erlang_c_formula():
     """Basic validation of Erlang-C implementation."""
-    assert erlang_c(10.0, 1/180, 12) > 0.0
-    assert erlang_c(5.0, 1/180, 20) < 0.30   # Relaxed threshold (more realistic)
+    service_rate = 1 / 180
+
+    assert erlang_c(10.0, service_rate, 12) == 1.0
+    assert erlang_c(0.05, service_rate, 20) < 0.30
 
 
 def test_find_min_servers():
     servers = find_min_servers(
-        arrival_rate=12.0, 
+        arrival_rate=0.05,
         service_rate=1/180, 
         target_sl=0.8, 
         target_wait=20
     )
     assert isinstance(servers, int)
-    assert servers >= 8
+    assert servers >= 10
 
 
 def test_generate_staffing_recommendations(sample_forecast_result, staffing_params):
