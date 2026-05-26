@@ -1,0 +1,88 @@
+name: Setup Custom Domain
+
+on:
+  workflow_dispatch:
+    inputs:
+      domain_name:
+        description: 'Custom domain name (e.g., wfm.example.com)'
+        required: true
+        type: string
+      resource_group:
+        description: 'Azure Resource Group name'
+        required: true
+        type: string
+
+jobs:
+  setup-domain:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Verify App Service
+      run: |
+        az webapp show \
+          --name smartwfm-lite \
+          --resource-group ${{ github.event.inputs.resource_group }} \
+          --query 'name'
+    
+    - name: Add Custom Domain Binding
+      run: |
+        az webapp config hostname add \
+          --webapp-name smartwfm-lite \
+          --resource-group ${{ github.event.inputs.resource_group }} \
+          --hostname ${{ github.event.inputs.domain_name }}
+    
+    - name: Create Managed Certificate
+      run: |
+        az webapp config ssl create \
+          --name smartwfm-lite \
+          --resource-group ${{ github.event.inputs.resource_group }} \
+          --hostname ${{ github.event.inputs.domain_name }}
+    
+    - name: Get Certificate Thumbprint
+      id: cert
+      run: |
+        THUMBPRINT=$(az webapp config ssl list \
+          --resource-group ${{ github.event.inputs.resource_group }} \
+          --query "[?hostNames[?contains(@, '${{ github.event.inputs.domain_name }}')]].thumbprint" \
+          -o tsv | head -1)
+        echo "thumbprint=$THUMBPRINT" >> $GITHUB_OUTPUT
+    
+    - name: Bind SSL Certificate
+      if: steps.cert.outputs.thumbprint != ''
+      run: |
+        az webapp config ssl bind \
+          --resource-group ${{ github.event.inputs.resource_group }} \
+          --name smartwfm-lite \
+          --certificate-thumbprint ${{ steps.cert.outputs.thumbprint }} \
+          --ssl-type SNI
+    
+    - name: Configure App Settings
+      run: |
+        az webapp config appsettings set \
+          --name smartwfm-lite \
+          --resource-group ${{ github.event.inputs.resource_group }} \
+          --settings \
+            CUSTOM_DOMAIN=${{ github.event.inputs.domain_name }} \
+            STREAMLIT_SERVER_HEADLESS=true \
+            STREAMLIT_CLIENT_SHOW_ERROR_DETAILS=false
+    
+    - name: Output Summary
+      run: |
+        echo "✓ Domain binding setup complete"
+        echo ""
+        echo "Domain: ${{ github.event.inputs.domain_name }}"
+        echo "App: smartwfm-lite"
+        echo ""
+        echo "Next steps:"
+        echo "1. Add DNS records to your registrar:"
+        echo "   - CNAME: $(echo ${{ github.event.inputs.domain_name }} | cut -d. -f1) → smartwfm-lite.azurewebsites.net"
+        echo "   - OR A record if using apex domain"
+        echo "2. Wait 5-15 minutes for DNS propagation"
+        echo "3. Test: https://${{ github.event.inputs.domain_name }}"
