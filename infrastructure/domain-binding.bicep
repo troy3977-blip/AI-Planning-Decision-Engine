@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param appServiceName string = 'smartwfm-lite'
+param appServiceName string = 'smartwfmai'
 param customDomainName string = ''
 param certificateThumbprint string = ''
 param environment string = 'production'

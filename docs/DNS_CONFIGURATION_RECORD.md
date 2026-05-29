@@ -2,7 +2,7 @@
 
 ## Project Information
 - **Project**: SmartWFM Lite
-- **App Service Name**: smartwfm-lite
+- **App Service Name**: smartwfmai
 - **Azure Region**: [Your Region]
 - **Resource Group**: [Your Resource Group]
 - **Domain Name**: [Your Domain]
@@ -15,8 +15,8 @@
 
 ## Azure App Service Details
 ```
-Default Hostname: smartwfm-lite.azurewebsites.net
-App Service URL: https://smartwfm-lite.azurewebsites.net
+Default Hostname: smartwfmai.azurewebsites.net
+App Service URL: https://smartwfmai.azurewebsites.net
 Custom Domain: https://[Your Domain]
 ```
 
@@ -29,7 +29,7 @@ Custom Domain: https://[Your Domain]
 ```
 Type:   CNAME
 Host:   wfm (or your subdomain)
-Value:  smartwfm-lite.azurewebsites.net
+Value:  smartwfmai.azurewebsites.net
 TTL:    3600
 Status: [ ] Added [ ] Pending [ ] Verified
 ```
@@ -42,7 +42,7 @@ Status: [ ] Added [ ] Pending [ ] Verified
 3. Find CNAME section
 4. Add Record:
    - Name: `wfm`
-   - Value: `smartwfm-lite.azurewebsites.net`
+   - Value: `smartwfmai.azurewebsites.net`
    - TTL: 3600
 5. Save
 
@@ -53,7 +53,7 @@ Status: [ ] Added [ ] Pending [ ] Verified
 4. Add New Record:
    - Type: CNAME Record
    - Host: `wfm`
-   - Value: `smartwfm-lite.azurewebsites.net`
+   - Value: `smartwfmai.azurewebsites.net`
    - TTL: 3600 (Automatic)
 5. Save
 
@@ -63,7 +63,7 @@ Status: [ ] Added [ ] Pending [ ] Verified
 3. Create Record:
    - Record name: `wfm.yourdomain.com`
    - Record type: CNAME
-   - Value: `smartwfm-lite.azurewebsites.net`
+   - Value: `smartwfmai.azurewebsites.net`
    - TTL: 300
 4. Create Record
 
@@ -74,7 +74,7 @@ Status: [ ] Added [ ] Pending [ ] Verified
 4. Create CNAME:
    - Name: `wfm`
    - Type: CNAME
-   - Alias: `smartwfm-lite.azurewebsites.net`
+   - Alias: `smartwfmai.azurewebsites.net`
 5. OK
 
 ---
@@ -82,7 +82,7 @@ Status: [ ] Added [ ] Pending [ ] Verified
 #### Option B: A Record (For Apex/Root Domain)
 
 First, obtain static IP from Azure Portal:
-- Path: App Services → smartwfm-lite → Custom domains
+- Path: App Services → smartwfmai → Custom domains
 - Copy the IP address shown
 
 ```
@@ -118,7 +118,7 @@ If you want `www.yourdomain.com` to also work:
 ```
 Type:   CNAME
 Host:   www
-Value:  smartwfm-lite.azurewebsites.net
+Value:  smartwfmai.azurewebsites.net
 TTL:    3600
 Status: [ ] Added [ ] Pending [ ] Verified
 ```
@@ -163,11 +163,11 @@ nslookup wfm.yourdomain.com
 # Expected Output: nslookup wfm.yourdomain.com
 # Server: [DNS Server]
 # Address: [IP]
-# wfm.yourdomain.com canonical name = smartwfm-lite.azurewebsites.net
+# wfm.yourdomain.com canonical name = smartwfmai.azurewebsites.net
 
 # Check with dig
 dig wfm.yourdomain.com
-# Expected: CNAME record pointing to smartwfm-lite.azurewebsites.net
+# Expected: CNAME record pointing to smartwfmai.azurewebsites.net
 
 # Check A record (if using A record method)
 nslookup yourdomain.com

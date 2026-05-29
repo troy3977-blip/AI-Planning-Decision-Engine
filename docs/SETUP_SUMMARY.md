@@ -32,14 +32,14 @@ Your Azure App Service is now ready to integrate with a custom domain. The follo
 **Linux/Mac:**
 ```bash
 chmod +x scripts/setup-domain.sh
-./scripts/setup-domain.sh your-domain.com your-resource-group smartwfm-lite
+./scripts/setup-domain.sh your-domain.com your-resource-group smartwfmai
 ```
 
 **Windows (PowerShell):**
 ```powershell
 .\scripts\setup-domain.ps1 -DomainName "your-domain.com" `
   -ResourceGroup "your-resource-group" `
-  -AppName "smartwfm-lite"
+  -AppName "smartwfmai"
 ```
 
 ### Option 2: GitHub Actions (No Local Tools Needed)
@@ -62,7 +62,7 @@ chmod +x scripts/setup-domain.sh
 
 Before starting, ensure you have:
 
-- ✅ Azure App Service deployed (`smartwfm-lite`)
+- ✅ Azure App Service deployed (`smartwfmai`)
 - ✅ Custom domain registered with a registrar
 - ✅ One of: Azure CLI, GitHub Actions access, or Azure Portal access
 - ✅ Admin access to your DNS provider (GoDaddy, Namecheap, Azure DNS, etc.)
@@ -151,7 +151,7 @@ Your Custom Domain (e.g., wfm.example.com)
           ↓
    CNAME/A Record
           ↓
-   smartwfm-lite.azurewebsites.net
+   smartwfmai.azurewebsites.net
           ↓
    Azure App Service
           ↓
@@ -200,7 +200,7 @@ After setup, you should have:
 
 - **Created**: 2024
 - **Last Updated**: 2024
-- **App Service Version**: smartwfm-lite
+- **App Service Version**: smartwfmai
 - **Framework**: Streamlit
 - **Platform**: Azure App Service
 

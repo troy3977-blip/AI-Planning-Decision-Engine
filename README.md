@@ -24,7 +24,7 @@ A fast, practical SaaS tool that helps operations managers at 50–500 employee 
 ## Deployment & Custom Domain
 
 ### Production Deployment
-- Deployed to Azure App Service: `smartwfm-lite.azurewebsites.net`
+- Deployed to Azure App Service: `smartwfmai.azurewebsites.net`
 - Auto-deployment via GitHub Actions on main branch push
 - See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment details
 

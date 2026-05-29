@@ -4,7 +4,7 @@
 This guide walks you through integrating a custom domain name with your Azure App Service deployment of SmartWFM Lite.
 
 ## Prerequisites
-- ✅ Azure App Service deployed (smartwfm-lite)
+- ✅ Azure App Service deployed (smartwfmai)
 - ✅ GitHub Actions CI/CD pipeline configured
 - Registered domain name (through any DNS provider)
 - Azure CLI installed locally
@@ -25,7 +25,7 @@ az login
 az webapp list --output table
 ```
 
-Your app should be listed as `smartwfm-lite` in resource group.
+Your app should be listed as `smartwfmai` in resource group.
 
 ## Step 2: Prepare Your Custom Domain
 
@@ -47,7 +47,7 @@ If using external DNS provider (GoDaddy, Namecheap, etc.):
 
 ### Manual Approach:
 
-1. Go to Azure Portal → App Services → smartwfm-lite
+1. Go to Azure Portal → App Services → smartwfmai
 2. Select **Custom domains** from left menu
 3. Click **+ Add custom domain**
 4. Enter your domain name (e.g., `wfm.example.com`)
@@ -56,7 +56,7 @@ If using external DNS provider (GoDaddy, Namecheap, etc.):
    - **A record validation** - Use static IP
 
 ### CNAME Method (Recommended):
-- Add CNAME record: `wfm` → `smartwfm-lite.azurewebsites.net`
+- Add CNAME record: `wfm` → `smartwfmai.azurewebsites.net`
 - Wait for validation (usually 5-15 minutes)
 
 ### A Record Method:
@@ -146,7 +146,7 @@ Quick command-line setup:
 ```bash
 # Set variables
 RESOURCE_GROUP="your-resource-group"
-APP_NAME="smartwfm-lite"
+APP_NAME="smartwfmai"
 DOMAIN_NAME="wfm.example.com"
 
 # Get the target hostname
@@ -171,7 +171,7 @@ Your current `deploy.yml` is configured for the app service deployment. After do
 
 1. No workflow changes needed for domain binding
 2. Domain is managed in Azure portal or via IaC
-3. App automatically serves on both `smartwfm-lite.azurewebsites.net` and `wfm.example.com`
+3. App automatically serves on both `smartwfmai.azurewebsites.net` and `wfm.example.com`
 
 ## DNS Configuration Examples
 
@@ -179,7 +179,7 @@ Your current `deploy.yml` is configured for the app service deployment. After do
 ```
 Type: CNAME
 Name: wfm
-Value: smartwfm-lite.azurewebsites.net
+Value: smartwfmai.azurewebsites.net
 TTL: 3600
 ```
 
@@ -195,7 +195,7 @@ TTL: 3600
 ```
 # Option 1: Use ALIAS (if your DNS supports it)
 Type: ALIAS
-Value: smartwfm-lite.azurewebsites.net
+Value: smartwfmai.azurewebsites.net
 
 # Option 2: Use A record (requires Azure DNS for automatic updates)
 Type: A

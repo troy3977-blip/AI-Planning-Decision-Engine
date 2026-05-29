@@ -1,5 +1,5 @@
 # PowerShell script to configure custom domain for Azure App Service
-# Usage: .\setup-domain.ps1 -DomainName "wfm.example.com" -ResourceGroup "my-rg" -AppName "smartwfm-lite"
+# Usage: .\setup-domain.ps1 -DomainName "wfm.example.com" -ResourceGroup "my-rg" -AppName "smartwfmai"
 
 param (
     [Parameter(Mandatory=$true)]
@@ -9,7 +9,7 @@ param (
     [string]$ResourceGroup = "default",
     
     [Parameter(Mandatory=$false)]
-    [string]$AppName = "smartwfm-lite"
+    [string]$AppName = "smartwfmai"
 )
 
 # Color output helper

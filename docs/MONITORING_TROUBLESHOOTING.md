@@ -57,7 +57,7 @@ check_dns
 az monitor metrics alert create \
   --name "Custom Domain Health Alert" \
   --resource-group your-resource-group \
-  --scopes "/subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.Web/sites/smartwfm-lite" \
+  --scopes "/subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.Web/sites/smartwfmai" \
   --condition "avg HttpQueueLength > 10" \
   --window-size 5m \
   --evaluation-frequency 1m \
@@ -117,7 +117,7 @@ dig your-domain.com @8.8.8.8
 
 2. **DNS record is incorrect**
    - Verify CNAME/A record in your DNS provider
-   - Expected: `wfm CNAME smartwfm-lite.azurewebsites.net`
+   - Expected: `wfm CNAME smartwfmai.azurewebsites.net`
    - Or: `@ A 20.185.X.X` (Azure IP)
 
 3. **Nameservers not configured**
@@ -166,18 +166,18 @@ openssl s_client -servername your-domain.com \
 **Solutions:**
 
 1. **Certificate not bound to domain**
-   - Check Azure Portal: App Services → smartwfm-lite → Custom domains
+   - Check Azure Portal: App Services → smartwfmai → Custom domains
    - Verify domain shows status "Healthy" or "Certificate OK"
    - If status is "Incomplete", restart domain binding process:
      ```bash
      # Remove and re-add domain
      az webapp config hostname delete \
-       --webapp-name smartwfm-lite \
+       --webapp-name smartwfmai \
        --resource-group your-resource-group \
        --hostname your-domain.com
      
      az webapp config hostname add \
-       --webapp-name smartwfm-lite \
+       --webapp-name smartwfmai \
        --resource-group your-resource-group \
        --hostname your-domain.com
      ```
@@ -193,7 +193,7 @@ openssl s_client -servername your-domain.com \
      ```bash
      az webapp config ssl bind \
        --resource-group your-resource-group \
-       --name smartwfm-lite \
+       --name smartwfmai \
        --certificate-thumbprint $THUMBPRINT \
        --ssl-type SNI
      ```
@@ -204,7 +204,7 @@ openssl s_client -servername your-domain.com \
    - If not renewed, manually:
      ```bash
      az webapp config ssl create \
-       --name smartwfm-lite \
+       --name smartwfmai \
        --resource-group your-resource-group \
        --hostname your-domain.com
      ```
@@ -213,7 +213,7 @@ openssl s_client -servername your-domain.com \
    - Ensure HTTPS-only mode is enabled:
      ```bash
      az webapp update \
-       --name smartwfm-lite \
+       --name smartwfmai \
        --resource-group your-resource-group \
        --https-only true
      ```
@@ -225,23 +225,23 @@ openssl s_client -servername your-domain.com \
 **Symptoms:**
 - HTTPS works, but page shows 403 or 404
 - App doesn't load on custom domain
-- Works on `smartwfm-lite.azurewebsites.net` but not custom domain
+- Works on `smartwfmai.azurewebsites.net` but not custom domain
 
 **Diagnosis:**
 ```bash
 # Check domain binding status
 az webapp config hostname show \
-  --webapp-name smartwfm-lite \
+  --webapp-name smartwfmai \
   --resource-group your-resource-group \
   --hostname your-domain.com
 
 # Check IP restrictions
 az webapp config access-restriction show \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group
 
 # Check Streamlit logs
-az webapp log tail --name smartwfm-lite --resource-group your-resource-group
+az webapp log tail --name smartwfmai --resource-group your-resource-group
 ```
 
 **Solutions:**
@@ -250,14 +250,14 @@ az webapp log tail --name smartwfm-lite --resource-group your-resource-group
    - Update `.streamlit/config.toml`:
      ```toml
      [server]
-     allowedOrigins = ["your-domain.com", "*.yourdomain.com", "smartwfm-lite.azurewebsites.net"]
+     allowedOrigins = ["your-domain.com", "*.yourdomain.com", "smartwfmai.azurewebsites.net"]
      ```
    - Redeploy app
 
 2. **CORS misconfiguration**
    - Check CORS settings:
      ```bash
-     az resource show --name smartwfm-lite \
+     az resource show --name smartwfmai \
        --resource-group your-resource-group \
        --resource-type "Microsoft.Web/sites" \
        --query "properties.cors"
@@ -267,13 +267,13 @@ az webapp log tail --name smartwfm-lite --resource-group your-resource-group
    - Check if IP restrictions are enabled:
      ```bash
      az webapp config access-restriction list \
-       --name smartwfm-lite \
+       --name smartwfmai \
        --resource-group your-resource-group
      ```
    - Remove restrictions if too strict:
      ```bash
      az webapp config access-restriction remove \
-       --name smartwfm-lite \
+       --name smartwfmai \
        --resource-group your-resource-group \
        --rule-name "Allow all" # or specific rule name
      ```
@@ -291,13 +291,13 @@ az webapp log tail --name smartwfm-lite --resource-group your-resource-group
 ```bash
 # Force HTTPS-only
 az webapp update \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --https-only true
 
 # Verify
 az webapp show \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --query "httpsOnly"
 ```
@@ -318,7 +318,7 @@ time curl -I https://your-domain.com
 
 # Check app service metrics
 az monitor metrics list \
-  --resource /subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.Web/sites/smartwfm-lite \
+  --resource /subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.Web/sites/smartwfmai \
   --metric "ResponseTime" \
   --start-time 2024-01-01T00:00:00 \
   --end-time 2024-01-02T00:00:00
@@ -336,12 +336,12 @@ az monitor metrics list \
 
 2. **Check for errors**
    ```bash
-   az webapp log tail --name smartwfm-lite \
+   az webapp log tail --name smartwfmai \
      --resource-group your-resource-group
    ```
 
 3. **Monitor resource usage**
-   - Azure Portal → smartwfm-lite → Metrics
+   - Azure Portal → smartwfmai → Metrics
    - Check CPU, Memory, Network
 
 ---
@@ -383,7 +383,7 @@ def get_database_connection():
 ### Restart App Service
 ```bash
 az webapp restart \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group
 ```
 
@@ -395,7 +395,7 @@ git push origin main
 # Or manual deployment
 az webapp deployment source config-zip \
   --resource-group your-resource-group \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --src-path ./app.zip
 ```
 
@@ -403,12 +403,12 @@ az webapp deployment source config-zip \
 ```bash
 # List deployment slots
 az webapp deployment slot list \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group
 
 # Swap to previous slot
 az webapp deployment slot swap \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --slot staging
 ```
@@ -449,16 +449,16 @@ echo | openssl s_client -connect your-domain.com:443
 openssl s_client -servername your-domain.com -connect your-domain.com:443
 
 # Check App Service
-az webapp show --name smartwfm-lite --resource-group your-resource-group
+az webapp show --name smartwfmai --resource-group your-resource-group
 
 # View logs
-az webapp log tail --name smartwfm-lite --resource-group your-resource-group
+az webapp log tail --name smartwfmai --resource-group your-resource-group
 
 # Restart app
-az webapp restart --name smartwfm-lite --resource-group your-resource-group
+az webapp restart --name smartwfmai --resource-group your-resource-group
 
 # Update settings
-az webapp config appsettings set --name smartwfm-lite --resource-group your-resource-group --settings KEY=VALUE
+az webapp config appsettings set --name smartwfmai --resource-group your-resource-group --settings KEY=VALUE
 ```
 
 ---

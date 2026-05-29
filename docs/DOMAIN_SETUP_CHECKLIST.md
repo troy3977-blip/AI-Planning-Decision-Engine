@@ -1,7 +1,7 @@
 # Custom Domain Setup Checklist
 
 ## Pre-Setup Verification
-- [ ] Azure App Service deployed (`smartwfm-lite`)
+- [ ] Azure App Service deployed (`smartwfmai`)
 - [ ] GitHub Actions deployment workflow running successfully
 - [ ] Custom domain registered with a registrar
 - [ ] Azure CLI installed locally
@@ -18,8 +18,8 @@
 cd /workspaces/AI-Planning-Decision-Engine
 
 # Get your resource group and app details
-az webapp show --name smartwfm-lite --query "resourceGroup" -o tsv
-az webapp show --name smartwfm-lite --query "defaultHostName" -o tsv
+az webapp show --name smartwfmai --query "resourceGroup" -o tsv
+az webapp show --name smartwfmai --query "defaultHostName" -o tsv
 ```
 - [ ] Note your resource group name: _______________
 - [ ] Note your app hostname: _______________
@@ -37,7 +37,7 @@ az webapp show --name smartwfm-lite --query "defaultHostName" -o tsv
 **Linux/Mac:**
 ```bash
 chmod +x scripts/setup-domain.sh
-./scripts/setup-domain.sh your-domain.com your-resource-group smartwfm-lite
+./scripts/setup-domain.sh your-domain.com your-resource-group smartwfmai
 ```
 - [ ] Script completed successfully
 
@@ -45,7 +45,7 @@ chmod +x scripts/setup-domain.sh
 ```powershell
 .\scripts\setup-domain.ps1 -DomainName "your-domain.com" `
   -ResourceGroup "your-resource-group" `
-  -AppName "smartwfm-lite"
+  -AppName "smartwfmai"
 ```
 - [ ] Script completed successfully
 
@@ -62,13 +62,13 @@ chmod +x scripts/setup-domain.sh
 ```bash
 # Add domain binding
 az webapp config hostname add \
-  --webapp-name smartwfm-lite \
+  --webapp-name smartwfmai \
   --resource-group your-resource-group \
   --hostname your-domain.com
 
 # Create managed certificate
 az webapp config ssl create \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --hostname your-domain.com
 
@@ -80,7 +80,7 @@ az webapp config ssl list \
 # Bind certificate (replace THUMBPRINT)
 az webapp config ssl bind \
   --resource-group your-resource-group \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --certificate-thumbprint THUMBPRINT \
   --ssl-type SNI
 ```
@@ -94,7 +94,7 @@ az webapp config ssl bind \
 - [ ] Log in to GoDaddy DNS
 - [ ] Add CNAME record:
   - Name: `wfm` (or your subdomain)
-  - Points To: `smartwfm-lite.azurewebsites.net`
+  - Points To: `smartwfmai.azurewebsites.net`
   - TTL: 3600
 
 **Namecheap:**
@@ -103,25 +103,25 @@ az webapp config ssl bind \
 - [ ] Click DNS Settings
 - [ ] Add CNAME record:
   - Host: `wfm`
-  - Value: `smartwfm-lite.azurewebsites.net`
+  - Value: `smartwfmai.azurewebsites.net`
   - TTL: 3600
 
 **Route53 (AWS):**
 - [ ] Create CNAME record set:
   - Name: `wfm.example.com`
   - Type: CNAME
-  - Value: `smartwfm-lite.azurewebsites.net`
+  - Value: `smartwfmai.azurewebsites.net`
   - TTL: 300
 
 **Other providers:**
 - [ ] Add CNAME record in your provider's DNS panel
 - [ ] Host: Your subdomain
-- [ ] Value: `smartwfm-lite.azurewebsites.net`
+- [ ] Value: `smartwfmai.azurewebsites.net`
 
 #### 3.2 For A Record Method (For apex domains)
 
 First, get the static IP from Azure Portal:
-1. Go to Azure Portal → smartwfm-lite → Custom domains
+1. Go to Azure Portal → smartwfmai → Custom domains
 2. Note the IP address listed
 
 Then add A record:
@@ -150,7 +150,7 @@ dig your-domain.com
 
 #### 4.3 Check Domain Binding in Azure Portal
 1. Go to Azure Portal
-2. App Services → smartwfm-lite → Custom domains
+2. App Services → smartwfmai → Custom domains
 - [ ] Your domain appears in the list
 - [ ] Status shows "Healthy" or "Certificate OK"
 
@@ -176,7 +176,7 @@ curl -v https://your-domain.com
 #### 5.1 Force HTTPS Redirection
 ```bash
 az webapp update \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --https-only true
 ```
@@ -185,7 +185,7 @@ az webapp update \
 #### 5.2 Update App Settings for Domain
 ```bash
 az webapp config appsettings set \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --settings \
     CUSTOM_DOMAIN="your-domain.com" \
@@ -230,7 +230,7 @@ allowedOrigins = ["your-domain.com", "*.example.com"]
 #### 7.1 Set Up WAF (Web Application Firewall)
 ```bash
 az webapp waf-config set \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --enabled true \
   --mode Detection
@@ -244,7 +244,7 @@ Configure in Azure Portal or via Azure CLI
 #### 7.3 Enable Diagnostics Logging
 ```bash
 az webapp log config \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --application-logging true
 ```
@@ -265,7 +265,7 @@ dig your-domain.com @8.8.8.8
 ```
 
 ### SSL Certificate Issues?
-- Azure Portal → smartwfm-lite → TLS/SSL settings
+- Azure Portal → smartwfmai → TLS/SSL settings
 - Look for error messages
 - Try manually renewing certificate
 
@@ -283,11 +283,11 @@ dig your-domain.com @8.8.8.8
 
 ```bash
 # View all custom domains
-az webapp hostname list --name smartwfm-lite --resource-group your-resource-group
+az webapp hostname list --name smartwfmai --resource-group your-resource-group
 
 # Remove a custom domain
 az webapp config hostname delete \
-  --webapp-name smartwfm-lite \
+  --webapp-name smartwfmai \
   --resource-group your-resource-group \
   --hostname your-domain.com
 
@@ -296,7 +296,7 @@ az webapp config ssl list --resource-group your-resource-group
 
 # Check domain binding status
 az webapp config hostname show \
-  --name smartwfm-lite \
+  --name smartwfmai \
   --resource-group your-resource-group \
   --hostname your-domain.com
 ```

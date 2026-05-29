@@ -139,7 +139,7 @@ Custom domains are separate from app startup. Configure app startup first, then 
 
 Expected flow:
 
-1. Confirm `https://smartwfm-lite.azurewebsites.net` loads.
+1. Confirm `https://smartwfmai.azurewebsites.net` loads.
 2. Add the custom hostname in Azure App Service.
 3. Add DNS records at the domain registrar.
 4. Create and bind an Azure managed certificate.
@@ -158,7 +158,7 @@ python -c "import config.settings; import ai.providers.openai_client; print('imp
 After deployment, check:
 
 ```bash
-curl -I https://smartwfm-lite.azurewebsites.net
+curl -I https://smartwfmai.azurewebsites.net
 ```
 
 Expected result:

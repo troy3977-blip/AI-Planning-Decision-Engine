@@ -14,13 +14,13 @@ NC='\033[0m' # No Color
 # Check arguments
 if [ $# -lt 1 ]; then
     echo -e "${RED}Usage: $0 <domain-name> [resource-group] [app-name]${NC}"
-    echo "Example: $0 wfm.example.com my-rg smartwfm-lite"
+    echo "Example: $0 wfm.example.com my-rg smartwfmai"
     exit 1
 fi
 
 DOMAIN_NAME=$1
 RESOURCE_GROUP=${2:-"default"}
-APP_NAME=${3:-"smartwfm-lite"}
+APP_NAME=${3:-"smartwfmai"}
 
 echo -e "${YELLOW}=== Azure App Service Domain Setup ===${NC}"
 echo "Domain: $DOMAIN_NAME"

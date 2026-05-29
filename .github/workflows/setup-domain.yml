@@ -27,21 +27,21 @@ jobs:
     - name: Verify App Service
       run: |
         az webapp show \
-          --name smartwfm-lite \
+          --name smartwfmai \
           --resource-group ${{ github.event.inputs.resource_group }} \
           --query 'name'
     
     - name: Add Custom Domain Binding
       run: |
         az webapp config hostname add \
-          --webapp-name smartwfm-lite \
+          --webapp-name smartwfmai \
           --resource-group ${{ github.event.inputs.resource_group }} \
           --hostname ${{ github.event.inputs.domain_name }}
     
     - name: Create Managed Certificate
       run: |
         az webapp config ssl create \
-          --name smartwfm-lite \
+          --name smartwfmai \
           --resource-group ${{ github.event.inputs.resource_group }} \
           --hostname ${{ github.event.inputs.domain_name }}
     
@@ -59,14 +59,14 @@ jobs:
       run: |
         az webapp config ssl bind \
           --resource-group ${{ github.event.inputs.resource_group }} \
-          --name smartwfm-lite \
+          --name smartwfmai \
           --certificate-thumbprint ${{ steps.cert.outputs.thumbprint }} \
           --ssl-type SNI
     
     - name: Configure App Settings
       run: |
         az webapp config appsettings set \
-          --name smartwfm-lite \
+          --name smartwfmai \
           --resource-group ${{ github.event.inputs.resource_group }} \
           --settings \
             CUSTOM_DOMAIN=${{ github.event.inputs.domain_name }} \
@@ -78,11 +78,11 @@ jobs:
         echo "✓ Domain binding setup complete"
         echo ""
         echo "Domain: ${{ github.event.inputs.domain_name }}"
-        echo "App: smartwfm-lite"
+        echo "App: smartwfmai"
         echo ""
         echo "Next steps:"
         echo "1. Add DNS records to your registrar:"
-        echo "   - CNAME: $(echo ${{ github.event.inputs.domain_name }} | cut -d. -f1) → smartwfm-lite.azurewebsites.net"
+        echo "   - CNAME: $(echo ${{ github.event.inputs.domain_name }} | cut -d. -f1) → smartwfmai.azurewebsites.net"
         echo "   - OR A record if using apex domain"
         echo "2. Wait 5-15 minutes for DNS propagation"
         echo "3. Test: https://${{ github.event.inputs.domain_name }}"
